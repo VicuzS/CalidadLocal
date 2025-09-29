@@ -1,10 +1,9 @@
-import InvitacionButton from "./componentes/InvitacionButton";
-import SeccionesPage from "./paginas/SeccionesPage";
+import AppRouter from "./paginas/AppRouter";
+
 function App() {
   return(
       <>
-        <SeccionesPage/>
-        <InvitacionButton/>
+        <AppRouter/>
       </>
   );
 }
