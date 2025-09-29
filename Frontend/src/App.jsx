@@ -1,10 +1,13 @@
-import SeccionesPage from "./paginas/SeccionesPage";
+import React from "react";
+import TareasIndividuales from "./componentes/TareasIndividuales";
+
 function App() {
-  return(
-      <>
-        <SeccionesPage/>
-      </>
+  return (
+    <div>
+      <h1>Gestión de Tareas</h1>
+      <TareasIndividuales />
+    </div>
   );
 }
 
-export default App
+export default App;
