@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "../styles/Register.css"
 import "../styles/Login.css"
 
@@ -54,7 +55,7 @@ function Register() {
                     ))}
                 </div>
                 <button className="login-button register-button" onClick={pruebaInputs}>Registrarse</button>
-                <button className="login-registrar ir-login-button">Ir a Inicio de Sesion</button>
+                <Link to="/login" className="login-registrar ir-login-button">Ir a Inicio de Sesion</Link>
             </div>
 
         </div>
