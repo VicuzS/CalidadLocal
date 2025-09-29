@@ -31,9 +31,9 @@ function Login(){
                         title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}  
                     ></i>
                 </div>
-                <button className="login-button" onClick={pruebaInputs}>
+                <Link to="/seccionesPage" className="login-button">
                     Log in
-                </button>
+                </Link>
                 <Link to="/register" className="login-registrar">
                      No tiene cuenta? Regístrese aquí!
                 </Link>

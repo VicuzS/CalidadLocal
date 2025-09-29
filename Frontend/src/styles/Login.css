@@ -52,9 +52,13 @@
 }
 
 .login-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px black solid;
     border-radius: 10px;
-    
+    text-decoration: none;
+    color: black;
     margin-top: 5%;
     width: 70%;
     height: 10%;
