@@ -1,12 +1,10 @@
-import React from "react";
-import TareasIndividuales from "./componentes/TareasIndividuales";
+import AppRouter from "./paginas/AppRouter";
 
 function App() {
-  return (
-    <div>
-      <h1>Gestión de Tareas</h1>
-      <TareasIndividuales />
-    </div>
+  return(
+      <>
+        <AppRouter/>
+      </>
   );
 }
 
