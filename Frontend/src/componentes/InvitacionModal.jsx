@@ -1,30 +1,48 @@
+import PropTypes from "prop-types";
+
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import "../styles/InvitacionModal.css";
 
 export default function InvitacionModal({ open, onClose, title, children }) {
-  if (!open) return null;
 
+    InvitacionModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    children: PropTypes.node,
+  };
+  
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
+    //Evitar scroll del body al abrir el modal
+    const prev = document.body.style.overflow; 
     document.body.style.overflow = "hidden";
-
+    
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
   }, [onClose]);
-
-  return createPortal( /*pintar por encima*/
-    <div className="modal-overlay" onClick={onClose}>
+  
+  if (!open) return null;
+  
+  return createPortal( //pintar por encima
+    <div className="modal-overlay"
+         role="button"
+         tabIndex={0}
+         onClick={onClose}
+         /*onKeyDown = {(e) => {
+          if (e.key === "Enter" || e.key === " ") onClose();
+         }}*/
+    >
       <div
         className="modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()} // para no cerrar el modal al clickearlo
       >
         <div className="modal-header">
           <h2 id="modal-title">{title}</h2>
