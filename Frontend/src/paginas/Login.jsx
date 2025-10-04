@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Ajusta la ruta
+import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
 
 function Login() {
@@ -10,7 +10,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { login } = useAuth(); // Usar el contexto
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,33 +21,29 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.correo || !formData.contraseña) {
-      setError("Por favor complete todos los campos");
-      return;
+        setError("Por favor complete todos los campos");
+        return;
     }
 
     setLoading(true);
     try {
-      // Usar la función login del contexto
-      const result = await login(
-        { 
-          username: formData.correo, 
-          password: formData.contraseña 
-        },
-        'profesor' // Cambia esto según el rol que necesites: 'profesor', 'alumno', 'admin', etc.
-      );
+        const result = await login({ 
+        username: formData.correo, 
+        password: formData.contraseña 
+        });
 
-      if (result.success) {
+        if (result.success) {
         navigate("/seccionesPage");
-      } else {
+        } else {
         setError(result.message || "Credenciales inválidas");
-      }
+        }
     } catch (err) {
-      console.error("Error login:", err);
-      setError("Error de conexión con el servidor");
+        console.error("Error login:", err);
+        setError("Error de conexión con el servidor");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+    };
 
   return (
     <div className="login-body">
