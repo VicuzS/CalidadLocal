@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (credentials, userRole) => {
+  const login = async (credentials) => { // Remover el parámetro userRole
     try {
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
@@ -40,27 +40,14 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
-      console.log("Respuesta completa del backend:", data); // Para debug
+      console.log("Respuesta completa del backend:", data);
 
       if (response.ok && data.success === true) {
-        // Tu backend devuelve data.user directamente
         let userData = data.user || {};
         
-        // El campo es "tipo", no "tipo_usuario"
-        const realUserRole = (userData.tipo || '').toLowerCase();
-        const selectedRole = userRole.toLowerCase();
+        // Remover la validación de rol
+        // Ya no verificamos si el rol coincide
 
-        console.log("Rol real del usuario:", realUserRole); // Para debug
-        console.log("Rol seleccionado:", selectedRole); // Para debug
-
-        if (realUserRole !== selectedRole) {
-          return { 
-            success: false, 
-            message: `No tiene permisos para acceder como ${userRole}. Su rol es: ${userData.tipo || 'desconocido'}` 
-          };
-        }
-
-        // Crear sesión con los campos correctos de tu backend
         const userSession = {
           id: userData.idPersona,
           username: userData.correo,
@@ -70,10 +57,8 @@ export const AuthProvider = ({ children }) => {
           nombres: userData.nombres,
           apellidoP: userData.apellidoP,
           apellidoM: userData.apellidoM,
-          // Puedes agregar más campos si los necesitas
         };
         
-        // Guardar en estado y localStorage
         setUser(userSession);
         localStorage.setItem('currentUser', JSON.stringify(userSession));
         
@@ -97,10 +82,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Función de logout
   const logout = async () => {
     try {
-      // Si el usuario tiene token, notificar al backend (opcional)
       if (user?.token) {
         await fetch(`${BASE_URL}/auth/logout`, {
           method: 'POST',
@@ -116,13 +99,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Error en logout:', error);
     } finally {
-      // Limpiar estado local siempre
       setUser(null);
       localStorage.removeItem('currentUser');
     }
   };
 
-  // Verificar si el usuario tiene un rol específico
   const hasRole = (role) => {
     return user?.role?.toLowerCase() === role.toLowerCase();
   };
