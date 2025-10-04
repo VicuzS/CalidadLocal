@@ -4,10 +4,13 @@ import Register from "../paginas/Register";
 import Dashboard from "../paginas/SeccionesPage";
 import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
+import InvitacionButton from "../componentes/InvitacionButton";
 
+//Le puso el invitacionButton para probar nada más :vs
 function AppRouter() {
   return (
     <BrowserRouter>
+       <InvitacionButton />
       <Routes>
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

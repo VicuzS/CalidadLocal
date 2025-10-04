@@ -1,38 +1,54 @@
-import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import "../styles/InvitacionModal.css";
 
 export default function InvitacionModal({ open, onClose, title, children }) {
-  if (!open) return null;
+  const dialogRef = useRef(null);
+
+  InvitacionModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    children: PropTypes.node,
+  };
 
   useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const dialog = dialogRef.current;
+
+    if (open && !dialog.open) {
+      dialog.showModal(); // abre el modal nativo
+      document.body.style.overflow = "hidden"; // bloquea scroll
+    } else if (!open && dialog.open) {
+      dialog.close(); // cierra el modal
+      document.body.style.overflow = ""; // restaura scroll
+    }
 
     return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
+      document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [open]);
 
-  return createPortal( /*pintar por encima*/
-    <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="modal-header">
-          <h2 id="modal-title">{title}</h2>
-          <button className="icon-btn" onClick={onClose} aria-label="Cerrar" type="button">×</button>
-        </div>
-        <div className="modal-body">{children}</div>
+  return createPortal(
+    <dialog
+      ref={dialogRef}
+      className="modal"
+      onCancel={onClose} 
+    >
+      <div className="modal-header">
+        <h2 id="modal-title">{title}</h2>
+        <button
+          className="icon-btn"
+          onClick={onClose}
+          aria-label="Cerrar"
+          type="button"
+        >
+          ×
+        </button>
       </div>
-    </div>, 
+
+      <div className="modal-body">{children}</div>
+    </dialog>,
     document.body
   );
 }
