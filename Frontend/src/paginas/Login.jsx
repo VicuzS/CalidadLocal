@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Ajusta la ruta
+import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
 
 function Login() {

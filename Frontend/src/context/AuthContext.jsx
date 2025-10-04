@@ -16,15 +16,34 @@ export const AuthProvider = ({ children }) => {
 
   const BASE_URL = 'http://localhost:8080';
 
+  // Restaurar sesión al cargar la app
   useEffect(() => {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    const initAuth = () => {
+      try {
+        const savedUser = localStorage.getItem('currentUser');
+        
+        if (savedUser) {
+          const userData = JSON.parse(savedUser);
+          const savedToken = localStorage.getItem('authToken') || userData.token;
+          
+          setUser({ ...userData, token: savedToken });
+          console.log('Sesión restaurada:', userData);
+        } else {
+          console.log('No hay sesión guardada');
+        }
+      } catch (error) {
+        console.error('Error al restaurar sesión:', error);
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('authToken');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
   }, []);
 
-  const login = async (credentials) => { // Remover el parámetro userRole
+  const login = async (credentials) => {
     try {
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
@@ -34,8 +53,8 @@ export const AuthProvider = ({ children }) => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-            email: credentials.username,
-            password: credentials.password
+          email: credentials.username,
+          password: credentials.password
         })
       });
 
@@ -45,22 +64,26 @@ export const AuthProvider = ({ children }) => {
       if (response.ok && data.success === true) {
         let userData = data.user || {};
         
-        // Remover la validación de rol
-        // Ya no verificamos si el rol coincide
+        // Extraer el token si viene en la respuesta
+        const token = data.token || data.accessToken || null;
 
         const userSession = {
           id: userData.idPersona,
           username: userData.correo,
           role: userData.tipo,
-          name: `${userData.nombres} ${userData.apellidoP} ${userData.apellidoM}`,
           email: userData.correo,
           nombres: userData.nombres,
           apellidoP: userData.apellidoP,
           apellidoM: userData.apellidoM,
+          active: userData.active !== false
         };
         
         setUser(userSession);
+        
         localStorage.setItem('currentUser', JSON.stringify(userSession));
+        if (token) {
+          localStorage.setItem('authToken', token);
+        }
         
         return { 
           success: true, 
@@ -84,12 +107,14 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      if (user?.token) {
+      const token = user?.token || localStorage.getItem('authToken');
+      
+      if (token) {
         await fetch(`${BASE_URL}/auth/logout`, {
           method: 'POST',
           mode: 'cors',
           headers: {
-            'Authorization': `Bearer ${user.token}`,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           }
         }).catch(() => {
@@ -99,8 +124,10 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Error en logout:', error);
     } finally {
+      // Limpiar todo
       setUser(null);
       localStorage.removeItem('currentUser');
+      localStorage.removeItem('authToken');
     }
   };
 
@@ -108,11 +135,18 @@ export const AuthProvider = ({ children }) => {
     return user?.role?.toLowerCase() === role.toLowerCase();
   };
 
+  const updateUser = (userData) => {
+    const updatedUser = { ...user, ...userData };
+    setUser(updatedUser);
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+  };
+
   const value = {
     user,
     login,
     logout,
     hasRole,
+    updateUser,
     isAuthenticated: !!user,
     loading
   };
