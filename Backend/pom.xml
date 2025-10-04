@@ -71,6 +71,11 @@
 			<version>2.6.0</version>
 		</dependency>
 
+		<!--Para la parte del servicio de enviar por gmail-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 
 	</dependencies>
 
