@@ -1,23 +1,30 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/TareasIndividuales.css";
 
-function TareasIndividuales() {
+export default function TareasIndividuales() {
+  const navigate = useNavigate();
+
+  const handleCrearTarea = () => {
+    navigate("/CrearTareaPage");
+  };
+
   return (
     <div className="tareas-container">
-      {/* Botón Crear tarea */}
       <div className="header">
-        <button className="crear-tarea-btn">Crear tarea</button>
+        <button className="btn btn-primary" onClick={handleCrearTarea}>
+          Crear Tarea
+          </button>
       </div>
 
-      {/* Tabla de estudiantes */}
       <table className="tabla-tareas">
         <thead>
           <tr>
-            <th>Promedio</th>
+            <th className="col-nota">Nota</th>
             <th>Nombre</th>
           </tr>
         </thead>
         <tbody>
-          {/* Por ahora vacío, luego se llenará dinámicamente */}
           <tr>
             <td colSpan="2" className="vacio">
               No hay estudiantes todavía
@@ -28,5 +35,3 @@ function TareasIndividuales() {
     </div>
   );
 }
-
-export default TareasIndividuales;

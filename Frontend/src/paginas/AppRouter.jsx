@@ -5,6 +5,8 @@ import Dashboard from "../paginas/SeccionesPage";
 import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 import InvitacionButton from "../componentes/InvitacionButton";
+import TareasIndividuales from "../paginas/TareasIndividuales";
+import CrearTareaPage from "../paginas/CrearTareaPage";
 
 //Le puso el invitacionButton para probar nada más :vs
 function AppRouter() {
@@ -19,11 +21,31 @@ function AppRouter() {
         <Route 
           path="/seccionesPage" 
           element={
-            <ProtectedRoute>
+            //<ProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
+            //</ProtectedRoute>
           } 
         />
+
+        <Route 
+          path="/tareasIndividuales"
+          element={
+            //<ProtectedRoute>
+              <TareasIndividuales />
+            //</ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/CrearTareaPage"
+          element={
+            //<ProtectedRoute>
+              <CrearTareaPage />
+            //</ProtectedRoute>
+          }
+        />
+
+        <Route path="/crearTarea" element={<CrearTareaPage />} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
