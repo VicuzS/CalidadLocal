@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# Archivos de configuración con credenciales, aca esta la bd
-application.properties
-application-*.properties
