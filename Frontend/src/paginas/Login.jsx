@@ -95,6 +95,7 @@ function Login() {
           ¿No tiene cuenta? Regístrese aquí!
         </Link>
       </div>
+      <p>correo y contraseña del profe: profe1 <br/>correo y contraseña del alumno: alumno1 <br/> el backend esta alojado en: https://cswproyect-production.up.railway.app/ <br/>tanto la bd y el backend estan deployados en railway</p>
     </div>
   );
 }
