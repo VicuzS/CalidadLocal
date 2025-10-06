@@ -14,8 +14,8 @@ public class AuthService {
         this.personaRepository = personaRepository;
     }
 
-    public LoginResponse login(String correo, String contraseña) {
-        return personaRepository.login(correo, contraseña)
+    public LoginResponse login(String correo, String contrasena) {
+        return personaRepository.login(correo, contrasena)
                 .map(user -> new LoginResponse(true, "Login exitoso", user))
                 .orElse(new LoginResponse(false, "Credenciales inválidas", null));
     }
