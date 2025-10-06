@@ -13,6 +13,8 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
+
+
     @PostMapping("/enviar")
     public ResponseEntity<String> enviarCorreo(@RequestBody CorreoRequest request) throws MessagingException{
         emailService.enviarCorreo(
