@@ -13,5 +13,5 @@ public interface PersonaRepository extends CrudRepository<PersonaUser, Integer> 
         WHERE correo = ?1 AND contrasena = ?2
         LIMIT 1
         """, nativeQuery = true)
-    Optional<PersonaUser> login(String correo, String contrasena);
+    Optional<PersonaUser> login(String correo, String contraseña);
 }
