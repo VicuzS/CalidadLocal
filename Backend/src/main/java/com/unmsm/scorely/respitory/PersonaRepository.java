@@ -10,7 +10,7 @@ public interface PersonaRepository extends CrudRepository<PersonaUser, Integer> 
     @Query(value = """
         SELECT *
         FROM v_usuario_info
-        WHERE correo = ?1 AND contraseña = ?2
+        WHERE correo = ?1 AND contrasena = ?2
         LIMIT 1
         """, nativeQuery = true)
     Optional<PersonaUser> login(String correo, String contraseña);
