@@ -1,6 +1,7 @@
 package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.models.Seccion;
+import com.unmsm.scorely.repository.ProfesorRepository;
 import com.unmsm.scorely.services.SeccionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class SeccionController {
 
     private final SeccionService seccionService;
+    private final ProfesorRepository profesorRepository;
 
     public SeccionController(SeccionService seccionService) {
         this.seccionService = seccionService;
