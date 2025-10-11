@@ -2,7 +2,7 @@ package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.dto.LoginRequest;
 import com.unmsm.scorely.dto.LoginResponse;
-import com.unmsm.scorely.services.AuthService;
+import com.unmsm.scorely.services.imp.AuthService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

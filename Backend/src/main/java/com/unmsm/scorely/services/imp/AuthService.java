@@ -1,7 +1,6 @@
-package com.unmsm.scorely.services;
+package com.unmsm.scorely.services.imp;
 
 import com.unmsm.scorely.dto.LoginResponse;
-import com.unmsm.scorely.models.PersonaUser;
 import com.unmsm.scorely.respitory.PersonaRepository;
 import org.springframework.stereotype.Service;
 
