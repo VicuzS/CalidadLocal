@@ -34,8 +34,6 @@ function SeccionesPage(){
 
     const obtenerIdProfesor = async () => {
         try {
-            console.log("🔵 Intentando obtener id_profesor para user.id:", user.id); // ← AGREGAR
-            
             const response = await fetch(
                 `${BASE_URL}/api/secciones/profesor-id/${user.id}`,
                 {
@@ -47,17 +45,13 @@ function SeccionesPage(){
             );
 
             const data = await response.json();
-            console.log("🟢 Respuesta de profesor-id:", data); // ← AGREGAR
-            
             if (data.success) {
                 setIdProfesor(data.idProfesor);
-                console.log("✅ idProfesor asignado:", data.idProfesor); // ← AGREGAR
             } else {
-                console.log("❌ Error:", data.message); // ← AGREGAR
                 setError("Usuario no es profesor");
             }
         } catch (err) {
-            console.error("💥 Error en catch:", err); // ← AGREGAR
+            console.error("Error al obtener id_profesor:", err);
             setError("Error al verificar usuario");
         }
     };
