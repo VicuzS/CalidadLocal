@@ -1,36 +1,64 @@
 package com.unmsm.scorely.models;
 
+import com.unmsm.scorely.enums.EstadoInvitacion;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "invitaciones")
+@Table(name = "Invitaciones")
+@Data // para generar getter y setter
+@Builder
+@NoArgsConstructor // Constructor sin parámetros
+@AllArgsConstructor // Constructor con todos los parámetros
 public class Invitacion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // genera ID de 1 en 1
     @Column(name = "id_invitaciones")
-    private Integer id;
+    private Integer idInvitaciones;
 
-    @Column(name = "id_seccion")
-    private Integer idSeccion;
+    /*
+     * Una invitación pertenece a una sección,
+     * pero una sección puede tener muchas invitaciones
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_seccion", nullable = false) // Indicar foranea
+    private Seccion seccion;
 
+    @Column(name = "correo", nullable = false, length = 50)
     private String correo;
-    private String codigo;
-    private String estado;
 
-    // Getters y setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    @Column(name = "estado", length = 30)
+    @Enumerated(EnumType.STRING)
+    private EstadoInvitacion estado;
 
-    public Integer getIdSeccion() { return idSeccion; }
-    public void setIdSeccion(Integer idSeccion) { this.idSeccion = idSeccion; }
+    //TODO columna en base de datos
+    @Column(name = "token", unique = true, length = 100)
+    private String token;
 
-    public String getCorreo() { return correo; }
-    public void setCorreo(String correo) { this.correo = correo; }
+    //TODO columna en base de datos
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
 
-    public String getCodigo() { return codigo; }
-    public void setCodigo(String codigo) { this.codigo = codigo; }
+    //TODO columna en base de datos
+    @Column(name = "fecha_expiracion")
+    private LocalDateTime fechaExpiracion;
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    @PrePersist
+    protected void onCreate() {
+        fechaCreacion = LocalDateTime.now();
+        fechaExpiracion = LocalDateTime.now().plusHours(48); // Expira en 48 horas
+    }
+
+    public boolean isExpirada() {
+        return LocalDateTime.now().isAfter(fechaExpiracion);
+    }
+
+    public boolean isPendiente() {
+        return estado == EstadoInvitacion.PENDIENTE;
+    }
 }
