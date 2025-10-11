@@ -25,6 +25,7 @@ export default function InvitacionButton() {
     };
 
     try {
+<<<<<<< HEAD
       const response = await fetch(`${API_URL}/correo/enviar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,16 +33,34 @@ export default function InvitacionButton() {
       });
 
       if (!response.ok) throw new Error(`Error ${response.statys}`);
+=======
+      const response = await fetch(
+        `${API_URL}/invitaciones/enviar?correo=${encodeURIComponent(email)}&nombre=${encodeURIComponent("Alumno Invitado")}&curso=${encodeURIComponent("Programación I")}`,
+       {
+      method: "POST"
+       }
+      );
+
+      if (!response.ok) throw new Error(`Error ${response.status}`);
+>>>>>>> master
 
       const mensajeBackend = await response.text();
       console.log("Respuesta del backend:", mensajeBackend);
       setMensaje("Invitación enviada correctamente.");
+<<<<<<< HEAD
+=======
+      
+>>>>>>> master
     } catch (error) {
       console.error("Error al enviar la invitación:", error);
       setMensaje("Error al enviar la invitación. Inténtalo de nuevo.");
     }
+<<<<<<< HEAD
 
     closeModal();
+=======
+    //closeModal();
+>>>>>>> master
   };
 
   return (
