@@ -19,6 +19,7 @@ public class SeccionController {
 
     public SeccionController(SeccionService seccionService) {
         this.seccionService = seccionService;
+        this.profesorRepository = profesorRepository;
     }
         
     // NUEVO: Obtener id_profesor desde id_persona
