@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/SeccionesPage.css"
 import SeccionCard from "../componentes/SeccionCard";
+import CrearSeccionModal from "../componentes/CrearSeccionModal"; // ← IMPORTAR
 
 function SeccionesPage(){
     const { user, logout } = useAuth();
@@ -13,6 +14,7 @@ function SeccionesPage(){
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [idProfesor, setIdProfesor] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false); // ← NUEVO ESTADO
     
     const BASE_URL = 'https://cswproyect-production.up.railway.app';
 
@@ -82,37 +84,44 @@ function SeccionesPage(){
         }
     };
 
-    const handleAgregarSeccion = async () => {
-        const nombre = prompt("Ingrese el nombre de la nueva sección:");
-        if (nombre && nombre.trim() !== "") {
-            setLoading(true);
-            try {
-                const response = await fetch(`${BASE_URL}/api/secciones`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        idProfesor: idProfesor,
-                        nombreCurso: nombre,
-                        anio: anioSeleccionado,
-                        codigo: Math.floor(Math.random() * 10000)
-                    })
-                });
+    // ← MODIFICAR ESTA FUNCIÓN
+    const handleAgregarSeccion = () => {
+        setModalOpen(true);
+    };
 
-                const data = await response.json();
+    // ← NUEVA FUNCIÓN
+    const handleCrearSeccion = async (nombreSeccion) => {
+        setLoading(true);
+        setModalOpen(false); // Cerrar modal inmediatamente
+        
+        try {
+            const response = await fetch(`${BASE_URL}/api/secciones`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idProfesor: idProfesor,
+                    nombreCurso: nombreSeccion,
+                    anio: anioSeleccionado,
+                    codigo: Math.floor(Math.random() * 10000)
+                })
+            });
 
-                if (data.success) {
-                    await cargarSecciones();
-                } else {
-                    alert(data.message || "Error al crear la sección");
-                }
-            } catch (err) {
-                console.error("Error al crear sección:", err);
-                alert("Error de conexión con el servidor");
-            } finally {
-                setLoading(false);
+            const data = await response.json();
+
+            if (data.success) {
+                await cargarSecciones();
+                // Opcional: Mostrar notificación de éxito
+                console.log("Sección creada:", data.seccion);
+            } else {
+                alert(data.message || "Error al crear la sección");
             }
+        } catch (err) {
+            console.error("Error al crear sección:", err);
+            alert("Error de conexión con el servidor");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -211,6 +220,14 @@ function SeccionesPage(){
                     </div>
                 </div>
             </div>
+
+            {/* ← AGREGAR EL MODAL */}
+            <CrearSeccionModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onCrear={handleCrearSeccion}
+                anioActual={anioSeleccionado}
+            />
         </div>
     );
 }
