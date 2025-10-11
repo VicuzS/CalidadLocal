@@ -1,53 +1,176 @@
 package com.unmsm.scorely.controllers;
 
-import com.unmsm.scorely.services.imp.InvitacionService;
+import com.unmsm.scorely.dto.*;
+import com.unmsm.scorely.services.InvitacionService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import java.net.URI;
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/invitaciones")
+@RequestMapping("/api/invitaciones")
+@Slf4j
 public class InvitacionController {
 
-    private final InvitacionService invitacionService;
+    @Value("${vfrontend.url}")
+    private String frontendUrlEnv;
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    private final InvitacionService invitacionService;
 
     public InvitacionController(InvitacionService invitacionService) {
         this.invitacionService = invitacionService;
     }
 
-    @PostMapping("/enviar")
-    public ResponseEntity<String> enviarInvitacion(
-            @RequestParam String correo,
-            @RequestParam String nombre,
-            @RequestParam String curso) {
+    /**
+     * Endpoint para que el profesor cree una invitación
+     * POST /api/invitaciones
+     */
+    @PostMapping
+    public ResponseEntity<ApiResponse<InvitacionResponse>> crearInvitacion(
+            @Valid @RequestBody InvitacionRequest request,
+            Authentication authentication
+    ) {
+        log.info("Solicitud de creación de invitación recibida");
 
-        invitacionService.crearYEnviarInvitacion(correo, nombre, curso);
-        return ResponseEntity.ok("Invitación enviada correctamente ✅");
+        Integer idProfesor = obtenerIdProfesorDeAuthentication(authentication);
+
+        InvitacionResponse response = invitacionService.crearInvitacion(request, idProfesor);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response, "Invitación enviada exitosamente"));
     }
 
-    // Endpoint para el alumno que hace clic en el enlace
+    /**
+     * Endpoint para obtener información de una invitación por token
+     * GET /api/invitaciones/info?token=xxx
+     */
+    @GetMapping("/info")
+    public ResponseEntity<ApiResponse<InvitacionResponse>> obtenerInformacionInvitacion(
+            @RequestParam String token
+    ) {
+        log.info("Consultando información de invitación");
+
+        InvitacionResponse response = invitacionService.obtenerInvitacionPorToken(token);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(response, "Información de invitación obtenida")
+        );
+    }
+
+    /**
+     * Endpoint para aceptar invitación (redirige al frontend)
+     * GET /api/invitaciones/aceptar?token=xxx
+     *
+     * Este endpoint maneja la lógica de redirección:
+     * - Si el usuario está logueado -> redirige al frontend con modal de confirmación
+     * - Si no está logueado -> redirige a login/registro
+     */
     @GetMapping("/aceptar")
-    public ResponseEntity<Void> aceptarInvitacion(@RequestParam String token) {
-        boolean ok = invitacionService.aceptarInvitacion(token);
+    public void aceptarInvitacionRedirect(
+            @RequestParam String token,
+            Authentication authentication,
+            HttpServletResponse response
+    ) throws IOException {
+        log.info("Procesando aceptación de invitación via GET");
 
-        // redirige al frontend con estado
-        // Será modificar parte del login para ver si está aceptado
-        URI destino = URI.create(frontendUrl + "/login?inv=" + (ok ? "ok" : "invalid"));
-        return ResponseEntity.status(302).location(destino).build();
+        String frontendUrl = frontendUrlEnv;
+
+        // Verificar si el usuario está autenticado
+        if (authentication == null || !authentication.isAuthenticated()) {
+            // Usuario no logueado -> redirigir a login con el token
+            String redirectUrl = String.format("%s/login?invitacion=%s", frontendUrl, token);
+            response.sendRedirect(redirectUrl);
+            return;
+        }
+
+        // Usuario logueado -> redirigir al home con modal de confirmación
+        String redirectUrl = String.format("%s/home?invitacion=%s", frontendUrl, token);
+        response.sendRedirect(redirectUrl);
     }
 
-    @PostMapping("/unirse")
-    public ResponseEntity<String> unirse(@RequestParam String token, @AuthenticationPrincipal String alumno) {
-        boolean unido = invitacionService.unirAlumnoAlCurso(token, usuario);
-        return unido
-                ? ResponseEntity.ok("Alumno unido correctamente al curso ")
-                : ResponseEntity.badRequest().body("Token inválido o ya usado ");
+    /**
+     * Endpoint para confirmar la aceptación de invitación (POST)
+     * POST /api/invitaciones/confirmar
+     *
+     * Este endpoint se llama desde el frontend después del modal de confirmación
+     */
+    @PostMapping("/confirmar")
+    public ResponseEntity<ApiResponse<AceptarInvitacionResponse>> confirmarAceptacion(
+            @Valid @RequestBody AceptarInvitacionRequest request,
+            Authentication authentication
+    ) {
+        log.info("Confirmando aceptación de invitación");
+
+        // Verificar que el usuario esté autenticado
+        if (authentication == null || !authentication.isAuthenticated()) {
+            AceptarInvitacionResponse response = AceptarInvitacionResponse.builder()
+                    .exito(false)
+                    .mensaje("Debes iniciar sesión para aceptar la invitación")
+                    .requiereLogin(true)
+                    .build();
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.success(response, "Requiere autenticación"));
+        }
+
+        // Obtener ID del alumno autenticado
+        Integer idAlumno = obtenerIdAlumnoDeAuthentication(authentication);
+
+        AceptarInvitacionResponse response = invitacionService.aceptarInvitacion(
+                request.getToken(),
+                idAlumno
+        );
+
+        if (response.isExito()) {
+            return ResponseEntity.ok(
+                    ApiResponse.success(response, "Te has unido al curso exitosamente")
+            );
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.success(response, response.getMensaje()));
+        }
     }
 
+    /**
+     * Endpoint para rechazar una invitación
+     * POST /api/invitaciones/rechazar
+     */
+    @PostMapping("/rechazar")
+    public ResponseEntity<ApiResponse<String>> rechazarInvitacion(
+            @Valid @RequestBody AceptarInvitacionRequest request,
+            Authentication authentication
+    ) {
+        log.info("Rechazando invitación");
+
+        // TODO: Implementar lógica de rechazo si es necesario
+
+        return ResponseEntity.ok(
+                ApiResponse.success("Invitación rechazada", "Invitación rechazada exitosamente")
+        );
+    }
+
+    /**
+     * Extrae el ID del profesor del objeto Authentication
+     */
+    private Integer obtenerIdProfesorDeAuthentication(Authentication authentication) {
+        // TODO: Implementar según el sistema de autenticación
+        return 1; // CAMBIAR EN PRODUCCIÓN
+    }
+
+    /**
+     * Extrae el ID del alumno del objeto Authentication
+     */
+    private Integer obtenerIdAlumnoDeAuthentication(Authentication authentication) {
+        // TODO: Implementar según el sistema de autenticación
+        return 1; // CAMBIAR EN PRODUCCIÓN
+    }
 }

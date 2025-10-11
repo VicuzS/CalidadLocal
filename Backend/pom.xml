@@ -77,6 +77,12 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
+		<!--Para el usuario autenticado-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 		<!--Para poder leer las variables de entorno-->
 		<dependency>
 			<groupId>me.paulschwarz</groupId>

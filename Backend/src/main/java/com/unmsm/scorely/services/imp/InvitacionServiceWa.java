@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class InvitacionService {
+public class InvitacionServiceWa {
 
     private final EmailServiceWA emailService;
     private final InvitacionRepository invitacionRepo;
@@ -15,7 +15,7 @@ public class InvitacionService {
     @Value("${backend.url}")
     private String backendUrl;
 
-    public InvitacionService(EmailServiceWA emailService, InvitacionRepository invitacionRepo) {
+    public InvitacionServiceWa(EmailServiceWA emailService, InvitacionRepository invitacionRepo) {
         this.emailService = emailService;
         this.invitacionRepo = invitacionRepo;
     }
