@@ -19,7 +19,7 @@ public class SeccionController {
     private final SeccionService seccionService;
     private final ProfesorRepository profesorRepository;
 
-    public SeccionController(SeccionService seccionService) {
+    public SeccionController(SeccionService seccionService, ProfesorRepository profesorRepository) {
         this.seccionService = seccionService;
         this.profesorRepository = profesorRepository;
     }
