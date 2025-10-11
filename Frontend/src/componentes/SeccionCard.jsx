@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import "../styles/SeccionCard.css"
 
 function SeccionCard({ seccion, onEliminar }) {
@@ -16,5 +17,13 @@ function SeccionCard({ seccion, onEliminar }) {
     </div>
   );
 }
+
+SeccionCard.propTypes = {
+  seccion: PropTypes.shape({
+    idSeccion: PropTypes.number.isRequired,
+    nombreCurso: PropTypes.string.isRequired,
+  }).isRequired,
+  onEliminar: PropTypes.func.isRequired,
+};
 
 export default SeccionCard;
