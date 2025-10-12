@@ -6,19 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Profesor")
+@Table(name = "Alumno")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profesor {
+public class Alumno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_profesor")
-    private Integer idProfesor;
+    @Column(name = "id_alumno")
+    private Integer idAlumno;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona", nullable = false)
     private Persona persona;
 
+    @Column(name = "codigo_alumno", unique = true, length = 20)
+    private String codigoAlumno;
 }

@@ -1,4 +1,4 @@
-package com.unmsm.scorely.respitory;
+package com.unmsm.scorely.repository;
 
 public class RespositoryDemo {
 }
