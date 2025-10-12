@@ -7,22 +7,6 @@ export default function FormularioTarea() {
   const [tipo, setTipo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fecha, setFecha] = useState("");
-<<<<<<< Updated upstream
-  const [modalidad, setModalidad] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  const manejarEnvio = (e) => {
-    e.preventDefault();
-    // validación simple
-    if (
-      !nombre.trim() ||
-      !tipo.trim() ||
-      !descripcion.trim() ||
-      !fecha.trim() ||
-      !modalidad.trim()
-    ) {
-=======
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -33,24 +17,10 @@ export default function FormularioTarea() {
     e.preventDefault();
 
     if (!nombre || !tipo || !descripcion || !fecha) {
->>>>>>> Stashed changes
       setError("Por favor completa todos los campos.");
       return;
     }
 
-<<<<<<< Updated upstream
-    // aquí iría la llamada al backend si aplica
-    console.log({
-      nombre,
-      tipo,
-      descripcion,
-      fecha,
-      modalidad,
-    });
-
-    // navegar a TareasIndividuales solo si la validación pasó
-    navigate("/tareasIndividuales");
-=======
     const nuevaTarea = {
       idSeccion, // Enviado automáticamente como 3 por ahora
       nombre,
@@ -81,7 +51,6 @@ export default function FormularioTarea() {
       console.error("❌ Error:", error);
       setError("No se pudo crear la tarea. Inténtalo nuevamente.");
     }
->>>>>>> Stashed changes
   };
 
   return (
@@ -114,16 +83,8 @@ export default function FormularioTarea() {
           required
         >
           <option value="">Seleccionar tipo...</option>
-<<<<<<< Updated upstream
-          <option value="Investigación">Investigación</option>
-          <option value="Programación">Programación</option>
-          <option value="Diseño">Diseño</option>
-          <option value="Presentación">Presentación</option>
-          <option value="Análisis">Análisis</option>
-=======
           <option value="Individual">Individual</option>
           <option value="Grupal">Grupal</option>
->>>>>>> Stashed changes
         </select>
       </div>
 
@@ -153,29 +114,9 @@ export default function FormularioTarea() {
         />
       </div>
 
-<<<<<<< Updated upstream
-      <div className="campo">
-        <label>Modalidad:</label>
-        <select
-          value={modalidad}
-          onChange={(e) => {
-            setModalidad(e.target.value);
-            setError("");
-          }}
-          required
-        >
-          <option value="">Seleccionar modalidad...</option>
-          <option value="Individual">Individual</option>
-          <option value="Grupal">Grupal</option>
-        </select>
-      </div>
-
-      <button type="submit" className="boton-crear">Crear Tarea</button>
-=======
       <button type="submit" className="boton-crear">
         Crear Tarea
       </button>
->>>>>>> Stashed changes
     </form>
   );
 }

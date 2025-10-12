@@ -3,16 +3,48 @@ import "../styles/InvitacionButton.css";
 import InvitacionModal from "./InvitacionModal";
 
 export default function InvitacionButton() {
+
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const openModal = () => setOpen(true);
   const closeModal = () => { setOpen(false); setEmail(""); };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Invitar a:", email);
-    closeModal();
+
+    const data = {
+      para: email,
+      nombre: "Alumno Invitado",
+      curso: "Programación I",
+      enlace: `${import.meta.env.VITE_FRONTEND_URL}/login`
+
+    };
+
+    try {
+
+      const response = await fetch(
+        `${API_URL}/invitaciones/enviar?correo=${encodeURIComponent(email)}&nombre=${encodeURIComponent("Alumno Invitado")}&curso=${encodeURIComponent("Programación I")}`,
+       {
+      method: "POST"
+       }
+      );
+
+      if (!response.ok) throw new Error(`Error ${response.status}`);
+
+      const mensajeBackend = await response.text();
+      console.log("Respuesta del backend:", mensajeBackend);
+      setMensaje("Invitación enviada correctamente.");
+
+    } catch (error) {
+      console.error("Error al enviar la invitación:", error);
+      setMensaje("Error al enviar la invitación. Inténtalo de nuevo.");
+    }
+
+    //closeModal();
   };
 
   return (
@@ -45,6 +77,8 @@ export default function InvitacionButton() {
           </div>
         </form>
       </InvitacionModal>
+
+      {mensaje && <p style={{ marginTop: "10px" }}>{mensaje}</p>}
     </>
   );
 }

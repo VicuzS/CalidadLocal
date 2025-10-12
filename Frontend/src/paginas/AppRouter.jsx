@@ -5,14 +5,27 @@ import Dashboard from "../paginas/SeccionesPage";
 import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 import InvitacionButton from "../componentes/InvitacionButton";
-import TareasIndividuales from "../paginas/TareasIndividuales";
-import CrearTareaPage from "../paginas/CrearTareaPage";
+import SeccionesPage from "../paginas/SeccionesPage";
 
 //Le puso el invitacionButton para probar nada más :vs
+
+//Si quieres ver tu vista, reemplaza SeccionesPage por el tuyo aca abajo y al final pon en export verVista
+//Restauralo despues de probarlo para que no haya conflictos en el merge luego
+function verVista() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SeccionesPage />} />
+        <Route path="*" element={<SeccionesPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
 function AppRouter() {
   return (
     <BrowserRouter>
-       <InvitacionButton />
+      <InvitacionButton />
       <Routes>
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
