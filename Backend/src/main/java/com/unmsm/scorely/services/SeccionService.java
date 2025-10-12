@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 public class SeccionService {
@@ -19,12 +20,25 @@ public class SeccionService {
 
     // Obtener todas las secciones de un profesor
     public List<Seccion> obtenerSeccionesPorProfesor(Integer idProfesor) {
-        return seccionRepository.findByIdProfesor(idProfesor);
+        try {
+            List<Seccion> secciones = seccionRepository.findByIdProfesor(idProfesor);
+            return secciones != null ? secciones : new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Error al obtener secciones: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     // Obtener secciones de un profesor filtradas por año
     public List<Seccion> obtenerSeccionesPorProfesorYAnio(Integer idProfesor, Integer anio) {
-        return seccionRepository.findByIdProfesorAndAnio(idProfesor, anio);
+        try {
+            List<Seccion> secciones = seccionRepository.findByIdProfesorAndAnio(idProfesor, anio);
+            return secciones != null ? secciones : new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Error al obtener secciones por año: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     // Crear nueva sección
