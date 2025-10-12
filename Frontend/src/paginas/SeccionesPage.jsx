@@ -91,34 +91,43 @@ function SeccionesPage(){
 
     // ← NUEVA FUNCIÓN
     const handleCrearSeccion = async (nombreSeccion) => {
+        console.log("🔵 Iniciando creación de sección"); // ← AGREGAR
+        console.log("🔵 idProfesor actual:", idProfesor); // ← AGREGAR
+        console.log("🔵 nombreSeccion:", nombreSeccion); // ← AGREGAR
+        console.log("🔵 anioSeleccionado:", anioSeleccionado); // ← AGREGAR
+        
         setLoading(true);
-        setModalOpen(false); // Cerrar modal inmediatamente
+        setModalOpen(false);
         
         try {
+            const payload = {
+                idProfesor: idProfesor,
+                nombreCurso: nombreSeccion,
+                anio: anioSeleccionado,
+                codigo: Math.floor(Math.random() * 10000)
+            };
+            
+            console.log("🟢 Payload a enviar:", JSON.stringify(payload, null, 2)); // ← AGREGAR
+            
             const response = await fetch(`${BASE_URL}/api/secciones`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    idProfesor: idProfesor,
-                    nombreCurso: nombreSeccion,
-                    anio: anioSeleccionado,
-                    codigo: Math.floor(Math.random() * 10000)
-                })
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json();
+            console.log("🟢 Respuesta del servidor:", data); // ← AGREGAR
 
             if (data.success) {
                 await cargarSecciones();
-                // Opcional: Mostrar notificación de éxito
-                console.log("Sección creada:", data.seccion);
+                console.log("✅ Sección creada:", data.seccion);
             } else {
                 alert(data.message || "Error al crear la sección");
             }
         } catch (err) {
-            console.error("Error al crear sección:", err);
+            console.error("💥 Error al crear sección:", err);
             alert("Error de conexión con el servidor");
         } finally {
             setLoading(false);
