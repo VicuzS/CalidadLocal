@@ -53,7 +53,7 @@ public class InvitacionServiceImpl implements InvitacionService {
         Seccion seccion = seccionRepository.findById(request.getIdSeccion())
                 .orElseThrow(() -> new RuntimeException("Seccion no encontrada")); // Cambiar por exception
 
-        if (!seccion.getIdProfesor().equals(idProfesor)) {
+        if (!seccion.getProfesor().getIdProfesor().equals(idProfesor)) {
             throw new RuntimeException("No tienes permisos para invitar alumnos a esta sección");
         }
 
@@ -138,7 +138,7 @@ public class InvitacionServiceImpl implements InvitacionService {
 
     private InvitacionResponse mapearAResponse(Invitacion invitacion) {
         String nombreProfesor = String.format("%s %s",
-                invitacion.getSeccion().getIdProfesor().getPersona(),
+                invitacion.getSeccion().getProfesor().getPersona(),
                 "");
 
         return InvitacionResponse.builder()

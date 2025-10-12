@@ -91,7 +91,7 @@ public class InvitacionController {
         }
 
         // Usuario logueado -> redirigir al home con modal de confirmación
-        String redirectUrl = String.format("%s/home?invitacion=%s", frontendUrl, token);
+        String redirectUrl = String.format("%s/seccionesPage?invitacion=%s", frontendUrl, token);
         response.sendRedirect(redirectUrl);
     }
 
