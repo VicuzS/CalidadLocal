@@ -18,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 public class InvitacionController {
 
-    @Value("${vfrontend.url}")
+    @Value("${frontend.url}")
     private String frontendUrlEnv;
 
     private final InvitacionService invitacionService;
