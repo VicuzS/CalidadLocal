@@ -20,4 +20,5 @@ public class Profesor {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona", nullable = false)
     private Persona persona;
+
 }

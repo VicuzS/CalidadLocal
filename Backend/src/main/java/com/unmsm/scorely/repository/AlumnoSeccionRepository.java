@@ -1,4 +1,4 @@
-package com.unmsm.scorely.respitory;
+package com.unmsm.scorely.repository;
 
 import com.unmsm.scorely.models.AlumnoSeccion;
 import org.springframework.data.jpa.repository.JpaRepository;

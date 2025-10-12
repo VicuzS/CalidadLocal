@@ -1,4 +1,4 @@
-package com.unmsm.scorely.respitory;
+package com.unmsm.scorely.repository;
 
 import com.unmsm.scorely.enums.EstadoInvitacion;
 import com.unmsm.scorely.models.Invitacion;
