@@ -88,7 +88,7 @@ public class InvitacionServiceImpl implements InvitacionService {
 
     @Override
     public AceptarInvitacionResponse aceptarInvitacion(String token, Integer idAlumno) {
-        log.info("Procesando aceptación de invitación con token{}", token);
+        log.info("Procesando aceptación de invitación con token {}", token);
 
         Invitacion invitacion = invitacionRepository.findByToken(token)
                 .orElseThrow(()-> new RuntimeException("InvitacionNoEncontrada"));
@@ -103,9 +103,9 @@ public class InvitacionServiceImpl implements InvitacionService {
         Alumno alumno = alumnoRepository.findById(idAlumno)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
 
-        if (!invitacion.getCorreo().equalsIgnoreCase(alumno.getPersona().getCorreo())){
+        /*if (!invitacion.getCorreo().equalsIgnoreCase(alumno.getPersona().getCorreo())){
             throw new RuntimeException("Esta invitación no corresponde a tu correo");
-        }
+        }*/
 
         if (matriculaService.estaMatriculado(alumno, invitacion.getSeccion())){
             invitacion.setEstado(EstadoInvitacion.ACEPTADA);
