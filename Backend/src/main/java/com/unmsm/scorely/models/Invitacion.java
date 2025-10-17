@@ -25,7 +25,7 @@ public class Invitacion {
      * Una invitación pertenece a una sección,
      * pero una sección puede tener muchas invitaciones
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // Muchas invitaciones a una sola sección
     @JoinColumn(name = "id_seccion", nullable = false) // Indicar foranea
     private Seccion seccion;
 
