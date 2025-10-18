@@ -1,11 +1,9 @@
 .tareas-container {
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid var(--color-shadow);
-  border-radius: 12px;
   background: var(--color-neutral);
-  box-shadow: 0 4px 8px var(--color-shadow);
-  font-family: 'Inter', 'Open Sans', 'Roboto', sans-serif;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px var(--color-shadow);
+  margin: 20px;
 }
 
 .header {
@@ -14,52 +12,38 @@
   margin-bottom: 15px;
 }
 
-.crear-tarea-btn {
-  padding: 10px 18px;
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.crear-tarea-btn:hover {
-  background-color: var(--color-secondary);
-}
-
 .tabla-tareas {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
+  background: white;
+  table-layout: fixed; /* 👈 asegura que el ancho sea uniforme */
 }
 
 .tabla-tareas th,
 .tabla-tareas td {
-  border: 1px solid var(--color-shadow);
-  padding: 12px;
+  border: 1px solid var(--color-primary);
+  padding: 10px;
+  text-align: left;
+}
+
+/* columnas fijas */
+.tabla-tareas th:nth-child(1),
+.tabla-tareas td:nth-child(1) {
+  width: 100px;   /* 👈 ancho fijo para la columna Nota */
   text-align: center;
 }
 
+.tabla-tareas th:nth-child(2),
+.tabla-tareas td:nth-child(2) {
+  width: calc(100% - 100px); /* 👈 el resto del espacio para Nombre */
+}
+
 .tabla-tareas th {
-  background-color: var(--color-accent);
+  background: var(--color-accent);
   color: var(--color-secondary);
-  font-weight: 700;
-}
-
-.tabla-tareas tr:nth-child(even) {
-  background-color: #fff;
-}
-
-.tabla-tareas tr:nth-child(odd) {
-  background-color: var(--color-neutral);
 }
 
 .vacio {
   text-align: center;
-  color: var(--color-secondary);
-  font-style: italic;
-  padding: 20px;
+  color: #888;
 }

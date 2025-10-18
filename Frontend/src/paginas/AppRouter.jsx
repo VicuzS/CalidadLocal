@@ -34,11 +34,31 @@ function AppRouter() {
         <Route 
           path="/seccionesPage" 
           element={
-            <ProtectedRoute>
+            //<ProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
+            //</ProtectedRoute>
           } 
         />
+
+        <Route 
+          path="/tareasIndividuales"
+          element={
+            //<ProtectedRoute>
+              <TareasIndividuales />
+            //</ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/CrearTareaPage"
+          element={
+            //<ProtectedRoute>
+              <CrearTareaPage />
+            //</ProtectedRoute>
+          }
+        />
+
+        <Route path="/crearTarea" element={<CrearTareaPage />} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
