@@ -16,35 +16,42 @@ export default function InvitacionButton() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      para: email,
-      nombre: "Alumno Invitado",
-      curso: "Programación I",
-      enlace: `${import.meta.env.VITE_FRONTEND_URL}/login`
+    // Recuperar profesor actual logueado
+    const profesor = JSON.parse(localStorage.getItem("currentUser"));
+    console.log("Profesor actual:", profesor);
 
+    if (!currentUser || currentUser.role !== "profesor") {
+      setMensaje("Solo los profesores pueden enviar invitaciones");
+      return;
+    }
+
+    const data = {
+      correoAlumno: email,
+      idSeccion: 1, // ID de la sección o curso al que se invita
     };
 
     try {
 
-      const response = await fetch(
-        `${API_URL}/invitaciones/enviar?correo=${encodeURIComponent(email)}&nombre=${encodeURIComponent("Alumno Invitado")}&curso=${encodeURIComponent("Programación I")}`,
-       {
-      method: "POST"
-       }
-      );
+      const response = await fetch(`${API_URL}/api/invitaciones`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      });
 
-      if (!response.ok) throw new Error(`Error ${response.status}`);
+      const result = await response.json();
+      console.log("Respuesta del backend:", result);
 
-      const mensajeBackend = await response.text();
-      console.log("Respuesta del backend:", mensajeBackend);
-      setMensaje("Invitación enviada correctamente.");
-
+      if (response.ok && result.success) {
+        setMensaje(result.message || "Invitación enviada correctamente 🎉");
+      } else {
+        setMensaje(result.message || "Error al enviar la invitación");
+      }
     } catch (error) {
       console.error("Error al enviar la invitación:", error);
-      setMensaje("Error al enviar la invitación. Inténtalo de nuevo.");
+      setMensaje("Error de conexión. Inténtalo de nuevo.");
     }
-
-    //closeModal();
   };
 
   return (

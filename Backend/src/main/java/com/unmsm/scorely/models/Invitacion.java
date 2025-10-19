@@ -25,7 +25,7 @@ public class Invitacion {
      * Una invitación pertenece a una sección,
      * pero una sección puede tener muchas invitaciones
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // Muchas invitaciones a una sola sección
     @JoinColumn(name = "id_seccion", nullable = false) // Indicar foranea
     private Seccion seccion;
 
@@ -36,15 +36,12 @@ public class Invitacion {
     @Enumerated(EnumType.STRING)
     private EstadoInvitacion estado;
 
-    //TODO columna en base de datos
     @Column(name = "token", unique = true, length = 100)
     private String token;
 
-    //TODO columna en base de datos
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
-    //TODO columna en base de datos
     @Column(name = "fecha_expiracion")
     private LocalDateTime fechaExpiracion;
 

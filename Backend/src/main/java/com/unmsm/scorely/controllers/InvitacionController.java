@@ -91,38 +91,17 @@ public class InvitacionController {
         }
 
         // Usuario logueado -> redirigir al home con modal de confirmación
-        String redirectUrl = String.format("%s/home?invitacion=%s", frontendUrl, token);
+        String redirectUrl = String.format("%s/seccionesPage?invitacion=%s", frontendUrl, token);
         response.sendRedirect(redirectUrl);
     }
 
-    /**
-     * Endpoint para confirmar la aceptación de invitación (POST)
-     * POST /api/invitaciones/confirmar
-     *
-     * Este endpoint se llama desde el frontend después del modal de confirmación
-     */
     @PostMapping("/confirmar")
     public ResponseEntity<ApiResponse<AceptarInvitacionResponse>> confirmarAceptacion(
-            @Valid @RequestBody AceptarInvitacionRequest request,
-            Authentication authentication
+            @Valid @RequestBody AceptarInvitacionRequest request
     ) {
-        log.info("Confirmando aceptación de invitación");
+        log.info("Confirmando aceptación de invitación provisional");
 
-        // Verificar que el usuario esté autenticado
-        if (authentication == null || !authentication.isAuthenticated()) {
-            AceptarInvitacionResponse response = AceptarInvitacionResponse.builder()
-                    .exito(false)
-                    .mensaje("Debes iniciar sesión para aceptar la invitación")
-                    .requiereLogin(true)
-                    .build();
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.success(response, "Requiere autenticación"));
-        }
-
-        // Obtener ID del alumno autenticado
-        Integer idAlumno = obtenerIdAlumnoDeAuthentication(authentication);
+        Integer idAlumno = request.getIdAlumno(); // viene del frontend
 
         AceptarInvitacionResponse response = invitacionService.aceptarInvitacion(
                 request.getToken(),
@@ -130,12 +109,9 @@ public class InvitacionController {
         );
 
         if (response.isExito()) {
-            return ResponseEntity.ok(
-                    ApiResponse.success(response, "Te has unido al curso exitosamente")
-            );
+            return ResponseEntity.ok(ApiResponse.success(response, "Te has unido al curso exitosamente"));
         } else {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.success(response, response.getMensaje()));
         }
     }

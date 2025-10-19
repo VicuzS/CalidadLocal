@@ -14,4 +14,6 @@ public class AceptarInvitacionRequest {
 
     @NotBlank(message = "El token es requerido")
     private String token;
+
+    private Integer idAlumno;
 }

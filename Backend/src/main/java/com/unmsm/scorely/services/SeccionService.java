@@ -21,7 +21,7 @@ public class SeccionService {
     // Obtener todas las secciones de un profesor
     public List<Seccion> obtenerSeccionesPorProfesor(Integer idProfesor) {
         try {
-            List<Seccion> secciones = seccionRepository.findByIdProfesor(idProfesor);
+            List<Seccion> secciones = seccionRepository.findByProfesor_IdProfesor(idProfesor);
             return secciones != null ? secciones : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Error al obtener secciones: " + e.getMessage());
@@ -32,7 +32,7 @@ public class SeccionService {
     // Obtener secciones de un profesor filtradas por año
     public List<Seccion> obtenerSeccionesPorProfesorYAnio(Integer idProfesor, Integer anio) {
         try {
-            List<Seccion> secciones = seccionRepository.findByIdProfesorAndAnio(idProfesor, anio);
+            List<Seccion> secciones = seccionRepository.findByProfesor_IdProfesorAndAnio(idProfesor, anio);
             return secciones != null ? secciones : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Error al obtener secciones por año: " + e.getMessage());
@@ -51,7 +51,7 @@ public class SeccionService {
     @Transactional
     public boolean eliminarSeccion(Integer idSeccion, Integer idProfesor) {
         // Verificar que la sección pertenece al profesor
-        if (!seccionRepository.existsByIdSeccionAndIdProfesor(idSeccion, idProfesor)) {
+        if (!seccionRepository.existsByIdSeccionAndProfesor_IdProfesor(idSeccion, idProfesor)) {
             return false; // No tiene permiso
         }
         

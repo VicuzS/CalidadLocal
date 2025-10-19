@@ -19,7 +19,7 @@ public class Seccion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profesor", nullable = false)
-    private Profesor idProfesor;
+    private Profesor profesor;
 
     @Column(name = "nombre_curso", nullable = false, length = 40)
     private String nombreCurso;
