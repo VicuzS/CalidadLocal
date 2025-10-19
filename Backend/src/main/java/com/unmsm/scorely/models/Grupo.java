@@ -18,10 +18,6 @@ public class Grupo {
     @Column(name = "id_grupo")
     private Integer idGrupo;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_alumno_seccion", nullable = false)
-    private AlumnoSeccion alumnoSeccion;
-
     @Column(name = "nombre_grupo", length = 20)
     private String nombreGrupo;
 

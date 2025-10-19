@@ -1,39 +1,42 @@
 package com.unmsm.scorely.models;
 
+import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Entity
-@Table
+@Table(name = "tarea")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tarea {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tarea")
     private Integer idTarea;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_seccion", nullable = false)
     private Seccion seccion;
 
-    @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Entrega> entrega;
-
     @Column(name = "nombre", nullable = false, length = 100)
-    private String nombreTarea;
+    private String nombre;
 
-    @Column(name = "tipo", nullable = false, length = 10)
-    private String tipoTarea;
+    @Column(name = "tipo", length = 10)
+    private String tipo;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "fecha_vencimiento")
