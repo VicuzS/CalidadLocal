@@ -102,7 +102,8 @@ public class InvitacionController {
     ) {
         log.info("Confirmando aceptación de invitación provisional");
 
-        Integer idAlumno = request.getIdAlumno(); // viene del frontend
+        Integer idPersona = request.getIdAlumno(); // viene del frontend
+        Integer idAlumno = invitacionService.buscarAlumnoPorIdPersona(idPersona);
 
         AceptarInvitacionResponse response = invitacionService.aceptarInvitacion(
                 request.getToken(),

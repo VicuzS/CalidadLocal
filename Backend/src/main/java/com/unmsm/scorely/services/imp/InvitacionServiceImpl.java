@@ -156,16 +156,31 @@ public class InvitacionServiceImpl implements InvitacionService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer buscarAlumnoPorIdPersona(Integer idPersona) {
+        log.info("Buscando idAlumno para idPersona: {}", idPersona);
+
+        return alumnoRepository.findIdAlumnoByIdPersona(idPersona)
+                .orElseThrow(() -> new RuntimeException(
+                        "No se encontró un alumno asociado a la persona con ID: " + idPersona
+                ));
+    }
+
     private InvitacionResponse mapearAResponse(Invitacion invitacion) {
+        var personaProfesor = invitacion.getSeccion()
+                .getProfesor()
+                .getPersona();
+
         String nombreProfesor = String.format("%s %s",
-                invitacion.getSeccion().getProfesor().getPersona(),
-                "");
+                personaProfesor.getNombres(),
+                personaProfesor.getApellidoP());
 
         return InvitacionResponse.builder()
                 .idInvitacion(invitacion.getIdInvitaciones())
                 .correo(invitacion.getCorreo())
                 .nombreCurso(invitacion.getSeccion().getNombreCurso())
-                .nombreProfesor(nombreProfesor)
+                .nombreProfesor(nombreProfesor.trim()) // <- Por si acaso hay espacio extra
                 .estado(invitacion.getEstado().name())
                 .token(invitacion.getToken())
                 .fechaCreacion(invitacion.getFechaCreacion())
