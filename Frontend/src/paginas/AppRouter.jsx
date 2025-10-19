@@ -5,7 +5,9 @@ import Dashboard from "../paginas/SeccionesPage";
 import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 import InvitacionButton from "../componentes/InvitacionButton";
-import SeccionesPage from "../paginas/SeccionesPage";
+import SeccionesPage from "../paginas/SeccionesPage"; 
+import TareasIndividualesPage from "./TareasIndividualesPage";
+import CrearTareaPage from "./CrearTareaPage";
 
 //Le puso el invitacionButton para probar nada más :vs
 
@@ -44,7 +46,7 @@ function AppRouter() {
           path="/tareasIndividuales"
           element={
             //<ProtectedRoute>
-              <TareasIndividuales />
+              <TareasIndividualesPage />
             //</ProtectedRoute>
           }
         />
