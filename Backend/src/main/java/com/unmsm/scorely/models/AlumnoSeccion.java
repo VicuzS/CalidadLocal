@@ -26,4 +26,8 @@ public class AlumnoSeccion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_seccion", nullable = false)
     private Seccion seccion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_grupo")
+    private Grupo grupo;
 }
