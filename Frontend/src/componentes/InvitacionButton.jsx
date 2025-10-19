@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../styles/InvitacionButton.css";
 import InvitacionModal from "./InvitacionModal";
+import { useAuth } from "../context/AuthContext";
 
 export default function InvitacionButton() {
 
@@ -8,6 +9,7 @@ export default function InvitacionButton() {
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
   
+  const { user } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
 
   const openModal = () => setOpen(true);
@@ -17,11 +19,9 @@ export default function InvitacionButton() {
     e.preventDefault();
 
     // Recuperar profesor actual logueado
-    const profesor = JSON.parse(localStorage.getItem("currentUser"));
-    console.log("Profesor actual:", profesor);
-
-    if (!currentUser || currentUser.role !== "profesor") {
-      setMensaje("Solo los profesores pueden enviar invitaciones");
+    
+    if (!user || user.role !== "profesor") {
+      setMensaje("Solo los profesores pueden enviar invitaciones.");
       return;
     }
 
