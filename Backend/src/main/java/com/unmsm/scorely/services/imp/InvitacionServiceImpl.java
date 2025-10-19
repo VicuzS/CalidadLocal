@@ -14,8 +14,9 @@ import com.unmsm.scorely.repository.InvitacionRepository;
 import com.unmsm.scorely.repository.SeccionRepository;
 import com.unmsm.scorely.services.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -137,6 +138,22 @@ public class InvitacionServiceImpl implements InvitacionService {
                 .orElseThrow(() -> new RuntimeException("Invitacion no encontrada"));
 
         return mapearAResponse(invitacion);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<InvitacionResponse> obtenerInvitacionesPendientes(String correo) {
+        log.info("Obteniendo invitaciones pendientes para correo: {}", correo);
+
+        List<Invitacion> invitaciones = invitacionRepository
+                .findPendingInvitationsByCorreo(correo);
+
+        log.info("Se encontraron {} invitaciones pendientes", invitaciones.size());
+
+        // Mapear a DTOs
+        return invitaciones.stream()
+                .map(this::mapearAResponse)
+                .toList();
     }
 
     private InvitacionResponse mapearAResponse(Invitacion invitacion) {
