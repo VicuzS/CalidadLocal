@@ -1,25 +1,25 @@
+// InvitacionButton.jsx
 import { useState } from "react";
 import "../styles/InvitacionButton.css";
-import InvitacionModal from "./InvitacionModal";
+import Modal from "./Modal";
 import { useAuth } from "../context/AuthContext";
 
-//import { useSeccion } from "../context/SeccionContext";
-
-
 export default function InvitacionButton() {
-
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [loading, setLoading] = useState(false); // Para no enviar varios correos mientras se procesa uno
+  const [loading, setLoading] = useState(false);
   const [enviadas, setEnviadas] = useState([]);
   
   const { user } = useAuth();
-  //const { idSeccion } = useSeccion();
   const API_URL = import.meta.env.VITE_API_URL;
 
   const openModal = () => setOpen(true);
-  const closeModal = () => { setOpen(false); setEmail(""); };
+  const closeModal = () => { 
+    setOpen(false); 
+    setEmail(""); 
+    setMensaje("");
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ export default function InvitacionButton() {
       return;
     }
 
-    setLoading(true); // 👈 solo después de pasar las validaciones
+    setLoading(true);
 
     const data = {
       correoAlumno: email,
@@ -67,14 +67,13 @@ export default function InvitacionButton() {
     }
   };
 
-
   return (
     <>
       <button className="btn btn-primary btn-invitacion" onClick={openModal} type="button">
         Invitar Alumno
       </button>
 
-      <InvitacionModal open={open} onClose={closeModal} title="Invitar Alumno">
+      <Modal open={open} onClose={closeModal} title="Invitar Alumno">
         <form onSubmit={onSubmit} className="form-grid">
           <label className="field">
             <span>Correo del alumno</span>
@@ -97,13 +96,15 @@ export default function InvitacionButton() {
             </button>
           </div>
         </form>
+        
         {mensaje && (
-          <p style={{ color: "black", marginTop: "10px", textAlign: "center" }}>
+          <p className="mensaje-feedback">
             {mensaje}
           </p>
-        )} 
+        )}
+        
         {enviadas.length > 0 && (
-          <div style={{ color: "black", marginTop: "15px" }}>
+          <div className="invitaciones-enviadas">
             <h4>Invitaciones enviadas:</h4>
             <ul>
               {enviadas.map((mail, i) => (
@@ -112,9 +113,7 @@ export default function InvitacionButton() {
             </ul>
           </div>
         )}
-      </InvitacionModal>
-
-
+      </Modal>
     </>
   );
 }
