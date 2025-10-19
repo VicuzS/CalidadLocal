@@ -1,5 +1,7 @@
 package com.unmsm.scorely.services.imp;
 
+import org.springframework.stereotype.Service;
+
 import com.unmsm.scorely.dto.AceptarInvitacionResponse;
 import com.unmsm.scorely.dto.InvitacionRequest;
 import com.unmsm.scorely.dto.InvitacionResponse;
@@ -14,6 +16,7 @@ import com.unmsm.scorely.services.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @Slf4j // Para los log.info(), log.error(), log.debug()
