@@ -2,6 +2,7 @@ package com.unmsm.scorely.services;
 
 import com.unmsm.scorely.dto.CrearSeccionRequest;
 import com.unmsm.scorely.dto.SeccionDTO;
+import com.unmsm.scorely.dto.EditarSeccionRequest;
 import com.unmsm.scorely.models.Profesor;
 import com.unmsm.scorely.models.Seccion;
 import com.unmsm.scorely.repository.ProfesorRepository;
@@ -84,7 +85,45 @@ public class SeccionService {
         // PASO 5: Guarda la entidad Seccion ya completa y correctamente asociada
         return seccionRepository.save(nuevaSeccion);
     }
+    
+    // Método para editar sección
+@Transactional
+public SeccionDTO editarSeccion(Integer idSeccion, Integer idProfesor, EditarSeccionRequest request) {
+    // Verificar que la sección existe y pertenece al profesor
+    Seccion seccion = seccionRepository.findById(idSeccion)
+            .orElseThrow(() -> new RuntimeException("Sección no encontrada"));
 
+    if (!seccion.getProfesor().getIdProfesor().equals(idProfesor)) {
+        throw new RuntimeException("No tiene permisos para editar esta sección");
+    }
+
+    // Validar duplicados
+    List<Seccion> seccionesExistentes = seccionRepository
+            .findByProfesor_IdProfesorAndAnio(idProfesor, request.getAnio());
+
+    for (Seccion s : seccionesExistentes) {
+        if (s.getNombreCurso().equalsIgnoreCase(request.getNombreCurso()) 
+            && !s.getIdSeccion().equals(idSeccion)) {
+            throw new RuntimeException("Ya existe una sección con ese nombre en el año " + request.getAnio());
+        }
+    }
+
+    // Actualizar
+    seccion.setNombreCurso(request.getNombreCurso());
+    seccion.setAnio(request.getAnio());
+
+    Seccion actualizada = seccionRepository.save(seccion);
+
+    SeccionDTO dto = new SeccionDTO();
+    dto.setIdSeccion(actualizada.getIdSeccion());
+    dto.setNombreCurso(actualizada.getNombreCurso());
+    dto.setAnio(actualizada.getAnio());
+    dto.setCodigo(actualizada.getCodigo());
+    dto.setId_profesor(actualizada.getProfesor().getIdProfesor());
+
+    return dto;
+}
+    
     // Eliminar sección (solo si pertenece al profesor)
     @Transactional
     public boolean eliminarSeccion(Integer idSeccion, Integer idProfesor) {
