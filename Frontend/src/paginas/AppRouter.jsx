@@ -18,8 +18,10 @@ function verVista() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SeccionesPage />} />
-        <Route path="*" element={<SeccionesPage />} />
+        //<Route path="/" element={<SeccionesPage />} />
+        //<Route path="*" element={<SeccionesPage />} />
+        <Route path="/" element={<CrearTareaPage />} />
+        <Route path="*" element={<CrearTareaPage />} />
       </Routes>
     </BrowserRouter>
   );
