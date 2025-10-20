@@ -1,6 +1,7 @@
 package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.dto.CrearSeccionRequest;
+import com.unmsm.scorely.dto.EditarSeccionRequest;
 import com.unmsm.scorely.dto.SeccionDTO;
 import com.unmsm.scorely.models.Seccion;
 import com.unmsm.scorely.repository.ProfesorRepository;
@@ -76,7 +77,46 @@ public class SeccionController {
         }
     }
 
-    // DELETE: Eliminar sección
+    // ✅ MÉTODO ACTUALIZADO - Editar sección
+    @PutMapping("/{idSeccion}/profesor/{idProfesor}")
+    public ResponseEntity<Map<String, Object>> editarSeccion(
+            @PathVariable Integer idSeccion,
+            @PathVariable Integer idProfesor,
+            @RequestBody EditarSeccionRequest request) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (request.getNombreCurso() == null || request.getNombreCurso().trim().isEmpty()) {
+                response.put("success", false);
+                response.put("message", "El nombre del curso es obligatorio");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (request.getAnio() == null) {
+                response.put("success", false);
+                response.put("message", "El año es obligatorio");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            // 🔵 ahora el service devuelve DTO
+            SeccionDTO dto = seccionService.editarSeccion(idSeccion, idProfesor, request);
+
+            response.put("success", true);
+            response.put("message", "Sección actualizada exitosamente");
+            response.put("seccion", dto); // ✅ DTO, no entidad JPA
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error al editar la sección: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    
     @DeleteMapping("/{idSeccion}/profesor/{idProfesor}")
     public ResponseEntity<Map<String, Object>> eliminarSeccion(
             @PathVariable Integer idSeccion,
