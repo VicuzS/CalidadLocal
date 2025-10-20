@@ -12,11 +12,11 @@ export default function TareasIndividuales() {
 
   return (
     <div className="tareas-container">
-      <div className="header">
-        <h2>Tareas de la Sección {idSeccion}</h2>
         <button className="btn btn-primary" onClick={handleCrearTarea}>
           Crear Tarea
         </button>
+      <div className="header">
+        <h2>Tareas de la Sección {idSeccion}</h2>
       </div>
 
       <table className="tabla-tareas">

@@ -9,7 +9,6 @@ export default function TareasIndividualesPage() {
       <InvitacionButton />
       <h2>Tareas Individuales</h2>
       <TareasIndividuales />
-      <AsignarNotas />
     </div>
   );
 }
