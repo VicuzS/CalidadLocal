@@ -5,9 +5,10 @@ import Dashboard from "../paginas/SeccionesPage";
 import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 import InvitacionButton from "../componentes/InvitacionButton";
-import SeccionesPage from "../paginas/SeccionesPage";
-import TareasIndividuales from "../paginas/TareasIndividuales";
-import CrearTareaPage from "../paginas/CrearTareaPage";
+import SeccionesPage from "../paginas/SeccionesPage"; 
+import TareasIndividualesPage from "./TareasIndividualesPage";
+import CrearTareaPage from "./CrearTareaPage";
+import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
 
 //Le puso el invitacionButton para probar nada más :vs
 
@@ -30,6 +31,7 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <InvitacionButton />
+      <InvitacionesPendientesButton />
       <Routes>
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
@@ -48,7 +50,7 @@ function AppRouter() {
           path="/tareasIndividuales"
           element={
             //<ProtectedRoute>
-              <TareasIndividuales />
+              <TareasIndividualesPage />
             //</ProtectedRoute>
           }
         />
