@@ -16,7 +16,7 @@ function SeccionesPage(){
     const [idProfesor, setIdProfesor] = useState(null);
     const [modalOpen, setModalOpen] = useState(false); // ← NUEVO ESTADO
     
-    const BASE_URL = 'http://localhost:8080';
+    const BASE_URL = 'https://cswproyect-production.up.railway.app';
 
     // Obtener id_profesor al cargar
     useEffect(() => {
