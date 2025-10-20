@@ -101,7 +101,7 @@ function SeccionesPage(){
         
         try {
             const payload = {
-                idProfesor: idProfesor,
+                id_profesor: idProfesor,
                 nombreCurso: nombreSeccion,
                 anio: anioSeleccionado,
                 codigo: Math.floor(Math.random() * 10000)
