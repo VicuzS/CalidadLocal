@@ -16,7 +16,7 @@ function SeccionesPage(){
     const [idProfesor, setIdProfesor] = useState(null);
     const [modalOpen, setModalOpen] = useState(false); // ← NUEVO ESTADO
     
-    const BASE_URL = 'https://cswproyect-production.up.railway.app';
+    const BASE_URL = 'http://localhost:8080';
 
     // Obtener id_profesor al cargar
     useEffect(() => {
@@ -101,7 +101,7 @@ function SeccionesPage(){
         
         try {
             const payload = {
-                idProfesor: idProfesor,
+                id_profesor: idProfesor,
                 nombreCurso: nombreSeccion,
                 anio: anioSeleccionado,
                 codigo: Math.floor(Math.random() * 10000)
