@@ -6,6 +6,8 @@ import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 import InvitacionButton from "../componentes/InvitacionButton";
 import SeccionesPage from "../paginas/SeccionesPage";
+import TareasIndividuales from "../paginas/TareasIndividuales";
+import CrearTareaPage from "../paginas/CrearTareaPage";
 
 //Le puso el invitacionButton para probar nada más :vs
 
@@ -15,8 +17,10 @@ function verVista() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SeccionesPage />} />
-        <Route path="*" element={<SeccionesPage />} />
+        //<Route path="/" element={<SeccionesPage />} />
+        //<Route path="*" element={<SeccionesPage />} />
+        <Route path="/" element={<CrearTareaPage />} />
+        <Route path="*" element={<CrearTareaPage />} />
       </Routes>
     </BrowserRouter>
   );
