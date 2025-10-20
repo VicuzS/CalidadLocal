@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import LoginPage from "../paginas/Login";
 import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
-import TareasPage from "../paginas/TareasIndividuales";
+import TareasPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
 
 // --- Componentes de Control de Rutas ---
@@ -61,11 +61,13 @@ function AppRouter() {
               <Navigate to="/secciones" replace />
             </ProtectedRoute>
           } 
-        />
+        /> 
         <Route path="/secciones" element={<ProtectedRoute><SeccionesPage /></ProtectedRoute>} />
         <Route path="/tareas" element={<ProtectedRoute><TareasPage /></ProtectedRoute>} />
         <Route path="/crear-tarea" element={<ProtectedRoute><CrearTareaPage /></ProtectedRoute>} />
-        
+
+        {/* Para ver las rutas de arriba tienes que loguearte con profe1 y busca esa ruta */}
+
         {/* Ruta para cualquier otra URL no definida */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
