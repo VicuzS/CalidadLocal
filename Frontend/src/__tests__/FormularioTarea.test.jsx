@@ -1,34 +1,46 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter, MemoryRouter, Route, Routes } from 'react-router-dom';
-import { vi } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import FormularioTarea from '../componentes/FormularioTarea';
 
-// Mock de useNavigate y useParams
+// Mock de fetch
+global.fetch = vi.fn();
+
+// Mock de useNavigate
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useParams: () => ({ idSeccion: '5' }),
   };
 });
-
-// Mock de fetch
-global.fetch = vi.fn();
 
 describe('FormularioTarea', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fetch.mockClear();
+    mockNavigate.mockClear();
   });
 
-  test('renderiza el formulario correctamente', () => {
-    render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // Helper para renderizar con ruta específica
+  const renderWithRouter = (idSeccion = '5') => {
+    return render(
+      <MemoryRouter initialEntries={[`/secciones/${idSeccion}/crear-tarea`]}>
+        <Routes>
+          <Route path="/secciones/:idSeccion/crear-tarea" element={<FormularioTarea />} />
+        </Routes>
+      </MemoryRouter>
     );
+  };
+
+  test('renderiza el formulario correctamente', () => {
+    renderWithRouter();
 
     expect(screen.getByText('Crear nueva tarea')).toBeInTheDocument();
     expect(screen.getByLabelText(/Nombre de la tarea:/i)).toBeInTheDocument();
@@ -39,14 +51,12 @@ describe('FormularioTarea', () => {
   });
 
   test('muestra error cuando faltan campos obligatorios', async () => {
-    render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
-    );
+    renderWithRouter();
 
-    const botonCrear = screen.getByRole('button', { name: /Crear Tarea/i });
-    fireEvent.click(botonCrear);
+    const form = screen.getByRole('button', { name: /Crear Tarea/i }).closest('form');
+    
+    // Prevenir la validación HTML5 nativa
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(screen.getByText('Por favor completa todos los campos.')).toBeInTheDocument();
@@ -54,20 +64,13 @@ describe('FormularioTarea', () => {
   });
 
   test('muestra error cuando no hay idSeccion', () => {
-    // Override del mock para este test específico
-    vi.mock('react-router-dom', async () => {
-      const actual = await vi.importActual('react-router-dom');
-      return {
-        ...actual,
-        useNavigate: () => mockNavigate,
-        useParams: () => ({}), // Sin idSeccion
-      };
-    });
-
+    // Renderizar sin idSeccion en la ruta
     render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
+      <MemoryRouter initialEntries={['/crear-tarea']}>
+        <Routes>
+          <Route path="/crear-tarea" element={<FormularioTarea />} />
+        </Routes>
+      </MemoryRouter>
     );
 
     const nombreInput = screen.getByLabelText(/Nombre de la tarea:/i);
@@ -101,11 +104,7 @@ describe('FormularioTarea', () => {
       json: async () => mockResponse,
     });
 
-    render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
-    );
+    renderWithRouter('5');
 
     // Llenar el formulario
     const nombreInput = screen.getByLabelText(/Nombre de la tarea:/i);
@@ -145,11 +144,7 @@ describe('FormularioTarea', () => {
       status: 500,
     });
 
-    render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
-    );
+    renderWithRouter();
 
     // Llenar el formulario
     const nombreInput = screen.getByLabelText(/Nombre de la tarea:/i);
@@ -171,14 +166,16 @@ describe('FormularioTarea', () => {
   });
 
   test('limpia el error cuando el usuario escribe', async () => {
-    render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
-    );
+    renderWithRouter();
 
-    const botonCrear = screen.getByRole('button', { name: /Crear Tarea/i });
-    fireEvent.click(botonCrear);
+    const form = screen.getByRole('button', { name: /Crear Tarea/i }).closest('form');
+    
+    // Crear un evento submit personalizado que no active la validación HTML5
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    Object.defineProperty(submitEvent, 'target', { value: form, enumerable: true });
+    
+    // Disparar el evento submit manualmente
+    form.dispatchEvent(submitEvent);
 
     // Debe mostrar error
     await waitFor(() => {
@@ -193,15 +190,81 @@ describe('FormularioTarea', () => {
   });
 
   test('valida formato de fecha', () => {
-    render(
-      <BrowserRouter>
-        <FormularioTarea />
-      </BrowserRouter>
-    );
+    renderWithRouter();
 
     const fechaInput = screen.getByLabelText(/Fecha de vencimiento:/i);
     
     // El input debe tener type="date"
     expect(fechaInput).toHaveAttribute('type', 'date');
+  });
+
+  test('muestra el idSeccion correcto en diferentes rutas', () => {
+    const { unmount } = renderWithRouter('123');
+    expect(screen.getByText(/Sección ID: 123/i)).toBeInTheDocument();
+    
+    unmount();
+    
+    renderWithRouter('456');
+    expect(screen.getByText(/Sección ID: 456/i)).toBeInTheDocument();
+  });
+
+  test('envía el idSeccion correcto en el payload', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ idTarea: 1 }),
+    });
+
+    renderWithRouter('999');
+
+    // Llenar formulario
+    fireEvent.change(screen.getByLabelText(/Nombre de la tarea:/i), { 
+      target: { value: 'Test' } 
+    });
+    fireEvent.change(screen.getByLabelText(/Tipo de tarea:/i), { 
+      target: { value: 'Individual' } 
+    });
+    fireEvent.change(screen.getByLabelText(/Descripción:/i), { 
+      target: { value: 'Test' } 
+    });
+    fireEvent.change(screen.getByLabelText(/Fecha de vencimiento:/i), { 
+      target: { value: '2025-12-31' } 
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /Crear Tarea/i }));
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        'http://localhost:8080/api/tareas',
+        expect.objectContaining({
+          body: expect.stringContaining('"idSeccion":999'),
+        })
+      );
+    });
+  });
+
+  test('maneja errores de red correctamente', async () => {
+    fetch.mockRejectedValueOnce(new Error('Network error'));
+
+    renderWithRouter();
+
+    // Llenar formulario
+    fireEvent.change(screen.getByLabelText(/Nombre de la tarea:/i), { 
+      target: { value: 'Test' } 
+    });
+    fireEvent.change(screen.getByLabelText(/Tipo de tarea:/i), { 
+      target: { value: 'Individual' } 
+    });
+    fireEvent.change(screen.getByLabelText(/Descripción:/i), { 
+      target: { value: 'Test' } 
+    });
+    fireEvent.change(screen.getByLabelText(/Fecha de vencimiento:/i), { 
+      target: { value: '2025-12-31' } 
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /Crear Tarea/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('No se pudo crear la tarea. Inténtalo nuevamente.')).toBeInTheDocument();
+    });
   });
 });
