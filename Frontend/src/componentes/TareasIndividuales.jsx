@@ -49,6 +49,10 @@ export default function TareasIndividuales() {
     navigate(`/secciones/${idSeccion}/crear-tarea`);
   };
 
+  const handleVolverASecciones = () => {
+    navigate('/secciones');
+  };
+
   const handleAlumnoClick = (alumno) => {
     // Guardar información del alumno seleccionado
     navigate(`/secciones/${idSeccion}/alumno/${alumno.idAlumno}/tareas`, {
@@ -69,6 +73,13 @@ export default function TareasIndividuales() {
   return (
     <div className="tareas-container">
       <div className="header">
+        <button 
+          className="btn btn-secondary" 
+          onClick={handleVolverASecciones}
+          title="Volver a mis secciones"
+        >
+          ← Volver a Secciones
+        </button>
         <button className="btn btn-primary" onClick={handleCrearTarea}>
           Crear Tarea
         </button>
@@ -91,13 +102,12 @@ export default function TareasIndividuales() {
             <tr>
               <th className="col-nota">Promedio</th>
               <th>Nombre Completo</th>
-              <th className="col-codigo">Código</th>
             </tr>
           </thead>
           <tbody>
             {alumnos.length === 0 ? (
               <tr>
-                <td colSpan="3" className="vacio">
+                <td colSpan="2" className="vacio">
                   No hay estudiantes matriculados en esta sección
                 </td>
               </tr>
@@ -114,9 +124,6 @@ export default function TareasIndividuales() {
                   </td>
                   <td className="nombre-alumno">
                     {alumno.nombreCompleto}
-                  </td>
-                  <td className="col-codigo">
-                    {alumno.codigoAlumno}
                   </td>
                 </tr>
               ))
