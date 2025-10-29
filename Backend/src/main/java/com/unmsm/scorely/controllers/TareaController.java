@@ -31,7 +31,7 @@ public class TareaController {
         this.tareaService = tareaService;
     }
 
-    // 🔹 Crear nueva tarea
+    // Crear nueva tarea
     @PostMapping
     public ResponseEntity<?> crearTarea(@RequestBody CrearTareaRequest req) {
         try {
@@ -65,7 +65,7 @@ public class TareaController {
         }
     }
 
-    // 🔹 Obtener tarea por ID
+    // Obtener tarea por ID
     @GetMapping("/{idTarea}")
     public ResponseEntity<Map<String, Object>> obtenerPorId(@PathVariable Integer idTarea) {
         Map<String, Object> response = new HashMap<>();
@@ -87,7 +87,7 @@ public class TareaController {
         }
     }
 
-    // 🔹 Actualizar tarea
+    // Actualizar tarea
     @PutMapping("/{idTarea}")
     public ResponseEntity<Map<String, Object>> actualizarTarea(
             @PathVariable Integer idTarea,
@@ -112,7 +112,7 @@ public class TareaController {
         }
     }
 
-    // 🔹 Eliminar tarea
+    // Eliminar tarea
     @DeleteMapping("/{idTarea}")
     public ResponseEntity<Map<String, Object>> eliminarTarea(@PathVariable Integer idTarea) {
         Map<String, Object> response = new HashMap<>();

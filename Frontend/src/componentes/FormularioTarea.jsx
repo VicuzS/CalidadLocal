@@ -10,8 +10,17 @@ export default function FormularioTarea() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   
-  // ✅ Obtener idSeccion desde la URL
+  // Obtener idSeccion desde la URL
   const { idSeccion } = useParams();
+
+  // Obtener la fecha actual en formato YYYY-MM-DD
+  const obtenerFechaMinima = () => {
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    return `${año}-${mes}-${dia}`;
+  };
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
@@ -21,7 +30,17 @@ export default function FormularioTarea() {
       return;
     }
 
-    // ✅ Validar que exista idSeccion
+    // Validar que la fecha no sea anterior a hoy
+    const fechaSeleccionada = new Date(fecha);
+    const fechaActual = new Date();
+    fechaActual.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fechas
+
+    if (fechaSeleccionada < fechaActual) {
+      setError("La fecha de vencimiento no puede ser anterior a la fecha actual.");
+      return;
+    }
+
+    // Validar que exista idSeccion
     if (!idSeccion) {
       setError("No se pudo identificar la sección.");
       return;
@@ -51,7 +70,7 @@ export default function FormularioTarea() {
       const data = await respuesta.json();
       console.log("✅ Tarea creada:", data);
 
-      // ✅ Redirigir de vuelta a las tareas de esta sección
+      // Redirigir de vuelta a las tareas de esta sección
       navigate(`/secciones/${idSeccion}/tareas`);
     } catch (error) {
       console.error("❌ Error:", error);
@@ -63,7 +82,7 @@ export default function FormularioTarea() {
     <form className="formulario-tarea" onSubmit={manejarEnvio}>
       <h2>Crear nueva tarea</h2>
       
-      {/* ✅ Mostrar la sección actual */}
+      {/* Mostrar la sección actual */}
       <p style={{ textAlign: 'center', color: '#666', fontSize: '14px', marginBottom: '10px' }}>
         Sección ID: {idSeccion}
       </p>
@@ -121,12 +140,16 @@ export default function FormularioTarea() {
           id="fecha-tarea"
           type="date"
           value={fecha}
+          min={obtenerFechaMinima()}
           onChange={(e) => {
             setFecha(e.target.value);
             setError("");
           }}
           required
         />
+        <small style={{ color: '#666', fontSize: '12px', marginTop: '4px' }}>
+          La fecha debe ser igual o posterior a hoy
+        </small>
       </div>
 
       <button type="submit" className="boton-crear">
