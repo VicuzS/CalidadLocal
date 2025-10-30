@@ -6,7 +6,7 @@ export default function TareasIndividuales() {
   const navigate = useNavigate();
   const { idSeccion } = useParams();
   
-  const [activeTab, setActiveTab] = useState("individuales"); // "individuales" o "grupales"
+  const [activeTab, setActiveTab] = useState("individuales");
   const [alumnos, setAlumnos] = useState([]);
   const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,18 +56,26 @@ export default function TareasIndividuales() {
     setError("");
     
     try {
-      setTimeout(() => {
-        setGrupos([
-          { idGrupo: 1, nombreGrupo: "Grupo 1", promedioFinal: 16.5, cantidadIntegrantes: 4 },
-          { idGrupo: 2, nombreGrupo: "Grupo 2", promedioFinal: 18.2, cantidadIntegrantes: 5 },
-          { idGrupo: 3, nombreGrupo: "Grupo 3", promedioFinal: 15.8, cantidadIntegrantes: 3 },
-        ]);
-        setLoading(false);
-      }, 500);
+      const response = await fetch(
+        `${BASE_URL}/api/grupos-seccion/seccion/${idSeccion}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
 
+      if (response.ok) {
+        const data = await response.json();
+        setGrupos(data);
+      } else {
+        setError("Error al cargar los grupos");
+      }
     } catch (err) {
       console.error("Error al cargar grupos:", err);
       setError("Error de conexión con el servidor");
+    } finally {
       setLoading(false);
     }
   };
@@ -90,9 +98,14 @@ export default function TareasIndividuales() {
   };
 
   const handleGrupoClick = (grupo) => {
-
+    // TODO: Implementar navegación a vista de grupo
     console.log("Click en grupo:", grupo);
-
+    // navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
+    //   state: { 
+    //     grupo: grupo,
+    //     nombreSeccion: grupo.nombreCurso 
+    //   }
+    // });
   };
 
   const formatearNota = (nota) => {
