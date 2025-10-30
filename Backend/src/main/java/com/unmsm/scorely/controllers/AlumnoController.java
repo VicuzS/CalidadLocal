@@ -1,20 +1,16 @@
 package com.unmsm.scorely.controllers;
 
+import com.unmsm.scorely.dto.SeccionAlumnoDTO;
+import com.unmsm.scorely.dto.SeccionDTO;
+import com.unmsm.scorely.repository.AlumnoRepository;
+import com.unmsm.scorely.services.SeccionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.unmsm.scorely.dto.SeccionAlumnoDTO;
-import com.unmsm.scorely.repository.AlumnoRepository;
-import com.unmsm.scorely.services.SeccionService;
 
 @RestController
 @RequestMapping("/api/alumno")

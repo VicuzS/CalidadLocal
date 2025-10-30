@@ -15,6 +15,7 @@ public class GrupoSeccionDTO {
     private Integer idGrupo;
     private String nombreGrupo;
     private BigDecimal promedioFinal;
+    private Integer cantidadIntegrantes;
     private Integer idSeccion;
     private String nombreCurso;
 }

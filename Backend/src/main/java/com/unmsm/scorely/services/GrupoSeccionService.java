@@ -46,12 +46,17 @@ public class GrupoSeccionService {
     }
 
     private GrupoSeccionDTO convertirADTO(Grupo grupo, Integer idSeccion) {
+        // Contar integrantes del grupo en esta sección
+        Long cantidadIntegrantes = grupoRepository
+                .contarIntegrantesPorGrupoYSeccion(grupo.getIdGrupo(), idSeccion);
+        
         return GrupoSeccionDTO.builder()
                 .idGrupo(grupo.getIdGrupo())
                 .nombreGrupo(grupo.getNombreGrupo())
                 .promedioFinal(grupo.getPromedioFinal() != null 
                     ? java.math.BigDecimal.valueOf(grupo.getPromedioFinal()) 
                     : null)
+                .cantidadIntegrantes(cantidadIntegrantes.intValue())
                 .idSeccion(idSeccion)
                 .build();
     }
