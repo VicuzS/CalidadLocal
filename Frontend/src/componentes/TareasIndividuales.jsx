@@ -85,7 +85,7 @@ export default function TareasIndividuales() {
   };
 
   const handleVolverASecciones = () => {
-    navigate('/secciones');
+    navigate('/seccionesPage');
   };
 
   const handleAlumnoClick = (alumno) => {
@@ -100,12 +100,6 @@ export default function TareasIndividuales() {
   const handleGrupoClick = (grupo) => {
     // TODO: Implementar navegación a vista de grupo
     console.log("Click en grupo:", grupo);
-    // navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
-    //   state: { 
-    //     grupo: grupo,
-    //     nombreSeccion: grupo.nombreCurso 
-    //   }
-    // });
   };
 
   const formatearNota = (nota) => {
@@ -173,7 +167,6 @@ export default function TareasIndividuales() {
               <th>
                 {activeTab === "individuales" ? "Nombre Completo" : "Nombre del Grupo"}
               </th>
-              {activeTab === "grupales" && <th className="col-integrantes">Integrantes</th>}
             </tr>
           </thead>
           <tbody>
@@ -204,7 +197,7 @@ export default function TareasIndividuales() {
             ) : (
               grupos.length === 0 ? (
                 <tr>
-                  <td colSpan="3" className="vacio">
+                  <td colSpan="2" className="vacio">
                     No hay grupos creados en esta sección
                   </td>
                 </tr>
@@ -221,9 +214,6 @@ export default function TareasIndividuales() {
                     </td>
                     <td className="nombre-grupo">
                       {grupo.nombreGrupo}
-                    </td>
-                    <td className="col-integrantes">
-                      {grupo.cantidadIntegrantes} miembro(s)
                     </td>
                   </tr>
                 ))
