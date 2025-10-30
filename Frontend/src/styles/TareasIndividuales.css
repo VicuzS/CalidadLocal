@@ -54,6 +54,40 @@
   transform: translateY(0);
 }
 
+/* Estilos para los tabs */
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  color: var(--color-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  bottom: -2px;
+}
+
+.tab-button:hover {
+  color: var(--color-primary);
+  background-color: rgba(125, 141, 134, 0.1);
+}
+
+.tab-button.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+  background-color: rgba(188, 168, 141, 0.1);
+}
+
 .seccion-info {
   margin-bottom: 15px;
 }
@@ -110,6 +144,12 @@
   font-weight: 600;
 }
 
+/* Columna de integrantes para grupos */
+.col-integrantes {
+  width: 150px;
+  text-align: center;
+}
+
 /* Columna de nombre toma el resto del espacio */
 .tabla-tareas th:nth-child(2),
 .tabla-tareas td:nth-child(2) {
@@ -125,7 +165,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Filas de alumnos clickeables */
+/* Filas de alumnos y grupos clickeables */
 .alumno-row {
   cursor: pointer;
   transition: all 0.2s ease;
@@ -147,6 +187,16 @@
 }
 
 .alumno-row:hover .nombre-alumno {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.nombre-grupo {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.grupo-row:hover .nombre-grupo {
   color: var(--color-primary);
   font-weight: 600;
 }
@@ -175,6 +225,24 @@
     justify-content: center;
   }
 
+  .tabs-container {
+    flex-direction: column;
+    gap: 5px;
+    border-bottom: none;
+  }
+
+  .tab-button {
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    padding: 10px 16px;
+    bottom: 0;
+  }
+
+  .tab-button.active {
+    border-bottom: none;
+    border-left-color: var(--color-accent);
+  }
+
   .tabla-tareas th,
   .tabla-tareas td {
     padding: 8px;
@@ -183,6 +251,11 @@
 
   .seccion-info h2 {
     font-size: 1.2rem;
+  }
+
+  .col-integrantes {
+    width: 100px;
+    font-size: 0.85rem;
   }
 }
 
@@ -195,5 +268,10 @@
   .btn {
     font-size: 0.9rem;
     padding: 8px 16px;
+  }
+
+  .tab-button {
+    font-size: 0.9rem;
+    padding: 8px 12px;
   }
 }
